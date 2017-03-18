@@ -6,6 +6,7 @@ package com.example.trafe.tappydefender;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -22,6 +23,17 @@ public class TDView extends SurfaceView implements  Runnable {
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder ourHolder;
+    public TDView(Context context, int x, int y) {
+        super(context);
+        //Initialize our drawing objects
+        ourHolder = getHolder();
+        paint = new Paint();
+
+        //Initialize our ship
+        player = new PlayerShip(context, x, y);
+
+    }
+
     @Override
     public boolean onTouchEvent (MotionEvent motionEvent){
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
@@ -34,16 +46,6 @@ public class TDView extends SurfaceView implements  Runnable {
                 break;
         }
         return true;
-    }
-    public TDView(Context context, int x, int y) {
-        super(context);
-        //Initialize our drawing objects
-        ourHolder = getHolder();
-        paint = new Paint();
-
-        //Initialize our ship
-        player = new PlayerShip(context, x, y);
-
     }
 
     /**
@@ -84,6 +86,8 @@ public class TDView extends SurfaceView implements  Runnable {
             canvas = ourHolder.lockCanvas();
 
             //Rub out the last frame
+            canvas.drawColor(Color.argb(255,0,0,0));
+
             canvas.drawBitmap(
                     player.getBitmap(),
                     player.getX(),
@@ -96,7 +100,7 @@ public class TDView extends SurfaceView implements  Runnable {
     }
     public void control(){
         try {
-            gameThread.sleep(17);
+            Thread.sleep(17);
         }catch (InterruptedException e) {
 
         }

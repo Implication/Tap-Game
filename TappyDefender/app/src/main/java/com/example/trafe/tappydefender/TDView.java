@@ -7,6 +7,7 @@ package com.example.trafe.tappydefender;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -21,15 +22,27 @@ public class TDView extends SurfaceView implements  Runnable {
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder ourHolder;
+    @Override
+    public boolean onTouchEvent (MotionEvent motionEvent){
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_UP:
+                player.stopBoosting();
+                break;
 
-    public TDView(Context context) {
+            case MotionEvent.ACTION_DOWN:
+                player.setBoosting();
+                break;
+        }
+        return true;
+    }
+    public TDView(Context context, int x, int y) {
         super(context);
         //Initialize our drawing objects
         ourHolder = getHolder();
         paint = new Paint();
 
         //Initialize our ship
-        player = new PlayerShip(context);
+        player = new PlayerShip(context, x, y);
 
     }
 

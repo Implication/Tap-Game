@@ -12,12 +12,21 @@ import android.view.SurfaceHolder;
  */
 
 public class PlayerShip {
+    private final int gravity = -12;
+    //Stop ship leaving the screen
+    private int maxY;
+    private int minY;
+    //Limit the bounds of the ship's speed
+    private final int min_speed = 1;
+    private final int max_speed = 20;
+
     private Bitmap bitmap;
     private int x, y;
     private int speed = 0;
+    private boolean boosting;
 
     //Constructor
-    public PlayerShip(Context context){
+    public PlayerShip(Context context, int screenX, int screenY){
         x = 50;
         y = 50;
         speed = 1;
@@ -25,10 +34,50 @@ public class PlayerShip {
         //To load bitmaps, we need to receive a context object from android
         //drawable ship is the name of the image we want to appear on the screen
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ship);
+        boosting = false;
+        maxY = screenY - bitmap.getHeight();
+        minY = 0;
     }
 
     public void update() {
+        //Are we boosting
+        if (boosting) {
+            //Speed up
+            speed += 2;
+        } else {
+            //Slow down
+            speed -= 5;
+        }
+
+        //Constrain top speed
+        if (speed > max_speed){
+            speed = max_speed;
+        }
+
+        //Never stop completely
+        if (speed < min_speed){
+            speed = min_speed;
+        }
+
+        //move the ship up or down
+        y -= speed + gravity;
+
+        //Never let the ship go off the screen
+        if (y < minY){
+            y = minY;
+        }
+
+        if (y > maxY){
+            y = maxY;
+        }
         x++;
+    }
+    public void setBoosting(){
+        boosting = true;
+    }
+
+    public void stopBoosting(){
+        boosting = false;
     }
 
     //Getters
